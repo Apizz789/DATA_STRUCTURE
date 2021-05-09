@@ -7,23 +7,6 @@ class Node:
     def __str__(self):
         return str(self.data)
 
-class Queue:
-    def __init__(self):
-        self.items = []
-
-    def is_empty(self):
-        return len(self.items) == 0
-
-    def size(self):
-        return len(self.items)
-
-    def enqueue(self, data):
-        self.items.append(data)
-
-    def dequeue(self):
-        if not self.is_empty():
-            return self.items.pop(0)
-
 class BST:
     def __init__(self):
         self.root = None
@@ -45,18 +28,11 @@ class BST:
                     return self.root
                 node = node.right
     
-    def pre_order(self, node):
-        if node == None:
-            return ''
-
-        s = str(node.data) + ' '\
-            + self.pre_order(node.left)\
-                + self.pre_order(node.right)
-        return s
-
-        # print(node.data, end = ' ')
-        # self.pre_oder(node.left)
-        # self.pre_oder(node.right)
+    def printTree(self, node, level = 0):
+        if node != None:
+            self.printTree(node.right, level + 1)
+            print('     ' * level, node)
+            self.printTree(node.left, level + 1)
 
     def in_order(self, node):
         if node == None:
@@ -67,9 +43,14 @@ class BST:
                  + self.in_order(node.right)
         return s
 
-        # self.in_oder(node.left)
-        # print(node.data, end = ' ')
-        # self.in_oder(node.right)
+    def pre_order(self, node):
+        if node == None:
+            return ''
+
+        s = str(node.data) + ' '\
+            + self.pre_order(node.left)\
+                + self.pre_order(node.right)
+        return s
 
     def post_order(self, node):
         if node == None:
@@ -80,30 +61,24 @@ class BST:
                 + str(node.data) + ' '
         return s
 
-        # self.post_order(node.left)
-        # self.post_order(node.right)
-        # print(node.data, end = ' ')
+    def Below(self, node, data):
+        if node == None:
+            return ''
+        
+        ans = self.Below(node.left, data)
+        if int(node.data) < int(data):
+            ans = ans + str(node.data) + ' '
+        ans += self.Below(node.right, data)
 
-    def BFS(self): 
-        q = Queue()
-        q.enqueue(self.root)
-        s = "Breadth : "
-        while not q.is_empty():
-            node = q.dequeue()
-            s += str(node.data) + ' '
-            if node.left is not None:
-                q.enqueue(node.left)
-            if node.right is not None:
-                q.enqueue(node.right)
-        return s
+        return ans
 
 if __name__ == '__main__':
     T = BST()
-    inp = [int(i) for i in input('Enter Input : ').split()]
+    inp, k = input('Enter Input : ').split('|')
+    inp = [int(i) for i in inp.split()]
     for i in inp:
         root = T.insert(i)
-    
-    print('Preorder :', T.pre_order(root))
-    print('Inorder :', T.in_order(root))
-    print('Postorder :', T.post_order(root))
-    print(T.BFS())
+    T.printTree(root)
+    temp = T.Below(root,k)
+    print('--------------------------------------------------')
+    print('Below',k,':',temp if temp != '' else 'Not have')
