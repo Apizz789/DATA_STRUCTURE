@@ -54,3 +54,5 @@ if __name__ == '__main__':
         root = T.insert(inp[i])
     T.printTree(root)
     T.checkpos(root)
+
+#FNS 29-05-2021
